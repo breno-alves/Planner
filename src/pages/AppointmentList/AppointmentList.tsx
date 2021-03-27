@@ -50,13 +50,13 @@ const AppointmentList = () => {
       </Container>
 
       <ButtonContainer>
-        <button>Prosseguir</button>
+        <Link to="/schedule">
+          <button>Prosseguir</button>
+        </Link>
       </ButtonContainer>
     </Container>
   )
 
 }
-
-
 
 export default AppointmentList;
