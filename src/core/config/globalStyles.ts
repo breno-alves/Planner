@@ -9,6 +9,10 @@ const GlobalStyle = createGlobalStyle`
     list-style: none;
     font-family: 'Poppins', sans-serif;
   }
+
+  body {
+    background-color: ${({ theme }) => theme.color.bgLow}
+  }
 `;
 
 export default GlobalStyle;

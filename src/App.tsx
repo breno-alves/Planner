@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { DEFAULT_THEME } from './core/utils/constants';
 import GlobalStyle from './core/config/globalStyles';
+import 'bootstrap/dist/css/bootstrap.css';
 
 import Routes from './routes';
 
