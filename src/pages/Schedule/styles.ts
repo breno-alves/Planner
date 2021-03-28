@@ -32,6 +32,9 @@ export const MainContainer = styled.div`
 export const AppointmentsList = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
 `;
 
 export const ScheduleContainer = styled.div`
@@ -40,40 +43,41 @@ export const ScheduleContainer = styled.div`
 
 export const Appointment = styled.div(
   ({ theme, color }) => css`
-    display: flex;
-    padding-left: 16px;
-    margin-bottom: 8px;
-    min-width: 160px;
-    min-height: 32px;
-    background-color: ${color};
-    border-radius: 5px;
-    align-items: center;
+    // width: 100%;
+    // display: flex;
+    // padding-left: 16px;
+    // margin-bottom: 8px;
+    // min-width: 160px;
+    // min-height: 32px;
+    // background-color: ${color ? color : '#c0c0c0'};
+    // border-radius: 5px;
+    // align-items: center;
 
-    p {
-      font-size: ${theme.fontSize.sm};
-      margin: 0;
-    }
+    // p {
+    //   font-size: ${theme.fontSize.sm};
+    //   margin: 0;
+    // }
   `,
 );
 
 export const ScheduleColumn = styled.div(
   ({ theme }) => `
-    display: flex;
-    justify-content: center;
-    background-color: ${theme.color.bgMedium};
-    height: 424px;
-    min-width: 120px;
-    margin-left: 16px;
-    border-radius: 10px;
-    box-shadow: inset 0px 4px 4px #1C1E23;
-    position: relative;
+    // display: flex;
+    // justify-content: center;
+    // background-color: ${theme.color.bgMedium};
+    // height: 424px;
+    // min-width: 180px;
+    // margin-left: 16px;
+    // border-radius: 10px;
+    // box-shadow: inset 0px 4px 4px #1C1E23;
+    // position: relative;
 
-    p {
-      position: absolute;
-      bottom: -55px;
-      color: ${theme.color.txtLow};
-      font-size: ${theme.fontSize.md};
-    }
+    // p {
+    //   position: absolute;
+    //   bottom: -55px;
+    //   color: ${theme.color.txtLow};
+    //   font-size: ${theme.fontSize.md};
+    // }
   `,
 );
 
