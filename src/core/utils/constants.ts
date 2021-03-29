@@ -23,7 +23,7 @@ export const DEFAULT_THEME = {
   spacing: {
     xxs: rem(4),
     xs: rem(8),
-    sm: rem(16),
+    sm: rem(14),
     md: rem(24),
     lg: rem(32),
     xl: rem(40),

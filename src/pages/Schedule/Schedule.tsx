@@ -102,11 +102,6 @@ const Schedule = () => {
   const [appointmentsList, setAppointmentsList] = useState<IAppointment[]>([...example]);
   const [columns, setColumns] = useState(columnsFromBackend);
 
-  // {appointmentsList.map((appointment, index) => (
-  //   <Appointment key={index} color={appointment.bgColor}>
-  //     <p style={appointment.textColor ? { color: appointment.textColor } : {}} >{index + 1}. {appointment.name}</p>
-  //   </Appointment>
-  // ))}
 
   const containerStyle = {
     display: 'flex',
