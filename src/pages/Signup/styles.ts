@@ -66,6 +66,11 @@ export const ButtonContainer = styled.div(
       outline: 0;
       background-color: ${theme.color.bgMedium};
       color: ${theme.color.txtMedium};
+      transition: 0.2s;
+
+      &:hover {
+        background-color: ${theme.color.bgHigh};
+      }
     }
   `,
 );
