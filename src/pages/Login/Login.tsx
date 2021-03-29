@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 import { Header, HeaderTitle, LoginContainer, InputContainer, ButtonContainer, InputRemember } from './styles'
 
@@ -14,7 +15,7 @@ const Login = () => {
           <HeaderTitle>
             <h1>Entrar</h1>
           </HeaderTitle>
-          <p>Novo usuário? <a href="#">Crie uma conta</a></p>
+          <p>Novo usuário? <Link to='/signup'>Crie uma conta</Link></p>
         </Header>
 
         <InputContainer>
