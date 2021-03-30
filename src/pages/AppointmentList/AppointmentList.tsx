@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, {
+  useEffect, useState, useCallback
+} from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { Container } from 'reactstrap'
-import { InputContainer, ButtonContainer, TitleContainer, InputWrapper, AppointmentsContainer, Appointment } from './styles'
+import { InputContainer, ButtonContainer, TitleContainer, InputWrapper, AppointmentsContainer, Appointment, AppointmentListContainer } from './styles'
 import { FiCornerDownLeft } from 'react-icons/fi';
 import { FaTrashAlt } from 'react-icons/fa'
-
+import Api from '../../services/api';
+import api from '../../services/api';
 
 const AppointmentList = () => {
-  const containerStyle = {
-    display: 'flex',
-    'flex-direction': 'column',
-    'justify-content': 'center',
-    height: '100vh'
-  }
 
-  const [appointment, setAppointment] = useState<string>();
+  const [appointment, setAppointment] = useState<string>('');
   const [appointments, setAppointments] = useState<string[]>([]);
+  const history = useHistory();
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -26,11 +24,31 @@ const AppointmentList = () => {
     }
   }
 
+  const handleBtnOnClick = useCallback(async (e) => {
+    e.preventDefault();
+    const user = localStorage.getItem('user');
+
+    if (user) {
+      const { scheduleId } = JSON.parse(user);
+
+      try {
+        await Promise.all(appointments.map(
+          async (name) => api.post('/appointments', { scheduleId, name, weekDay: 0, duration: 0 })
+        ));
+        setAppointments([]);
+        history.push('/schedules');
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [appointments]);
+
   return (
-    <Container style={containerStyle}>
+    <AppointmentListContainer >
       <TitleContainer>
         <h3>Adicione até dez compromissos que você deseja monitorar em sua rotina:</h3>
       </TitleContainer>
+
       <InputContainer>
         <InputWrapper>
           <input type="text" name="appointment" placeholder="ex: Fazer exercícios" value={appointment} onChange={(e) => setAppointment(e.currentTarget.value)} onKeyPress={handleKeyPress} />
@@ -50,11 +68,9 @@ const AppointmentList = () => {
       </Container>
 
       <ButtonContainer>
-        <Link to="/schedule">
-          <button>Prosseguir</button>
-        </Link>
+        <button onClick={handleBtnOnClick} type="button">Prosseguir</button>
       </ButtonContainer>
-    </Container>
+    </AppointmentListContainer>
   )
 
 }

@@ -1,6 +1,13 @@
 import styled, { css } from 'styled-components';
 import { FiTrash2 } from 'react-icons/fi';
 
+export const AppointmentListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+`;
+
 export const TitleContainer = styled.div(
   ({ theme }) => css`
     display: flex;
