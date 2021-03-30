@@ -1,47 +1,63 @@
 import React, {
   useEffect, useState, useCallback
 } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Container } from 'reactstrap'
 import { InputContainer, ButtonContainer, TitleContainer, InputWrapper, AppointmentsContainer, Appointment, AppointmentListContainer } from './styles'
 import { FiCornerDownLeft } from 'react-icons/fi';
 import { FaTrashAlt } from 'react-icons/fa'
 import Api from '../../services/api';
-import api from '../../services/api';
+
+import { getToken } from '../../services/auth';
 
 const AppointmentList = () => {
 
   const [appointment, setAppointment] = useState<string>('');
   const [appointments, setAppointments] = useState<string[]>([]);
-  const history = useHistory();
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
+  useEffect(() => {
+    async function loadAppointments() {
+      const user = localStorage.getItem('user');
+      const token = getToken();
+      Api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+      if (user) {
+        const { scheduleId } = JSON.parse(user);
+
+        try {
+          const { data }: { data: any[] } = await Api.get(`/appointments/list/${scheduleId}`);
+          const appointsName = data.map(({ name }) => name);
+          setAppointments(appointsName);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+
+    loadAppointments();
+  }, []);
+
+  const handleKeyPress = useCallback(async (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       if (appointment !== '' && appointment !== undefined) {
-        setAppointments([...appointments, appointment]);
-        setAppointment('');
+        const token = getToken();
+        const user = localStorage.getItem('user');
+        Api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+        if (user) {
+          const { scheduleId } = JSON.parse(user);
+
+          try {
+            await Api.post('/appointments', { name: appointment, scheduleId, weekDay: 0, duration: 0 });
+            setAppointments([...appointments, appointment]);
+            setAppointment('');
+          } catch (err) {
+            console.log(err);
+          }
+        }
       }
     }
-  }
-
-  const handleBtnOnClick = useCallback(async (e) => {
-    e.preventDefault();
-    const user = localStorage.getItem('user');
-
-    if (user) {
-      const { scheduleId } = JSON.parse(user);
-
-      try {
-        await Promise.all(appointments.map(
-          async (name) => api.post('/appointments', { scheduleId, name, weekDay: 0, duration: 0 })
-        ));
-        setAppointments([]);
-        history.push('/schedules');
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  }, [appointments]);
+  }, [appointments, appointment]);
 
   return (
     <AppointmentListContainer >
@@ -68,7 +84,9 @@ const AppointmentList = () => {
       </Container>
 
       <ButtonContainer>
-        <button onClick={handleBtnOnClick} type="button">Prosseguir</button>
+        <Link to="/schedules">
+          <button type="button">Prosseguir</button>
+        </Link>
       </ButtonContainer>
     </AppointmentListContainer>
   )

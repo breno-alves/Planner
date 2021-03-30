@@ -1,3 +1,5 @@
+import Api from '../services/api';
+
 export const isAuthenticated = () => {
   const refreshToken = localStorage.getItem('accessToken');
   return !!refreshToken;

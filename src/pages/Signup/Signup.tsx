@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api';
-import Api from '../../services/api';
 
 import { Header, HeaderTitle, SignUpContainer, InputContainer, ButtonContainer } from './styles'
 

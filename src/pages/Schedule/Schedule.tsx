@@ -3,62 +3,25 @@ import { Container, Row } from 'reactstrap'
 import { HeaderContainer, Header, MainContainer, AppointmentsList, ScheduleContainer, Appointment, ScheduleColumn, ButtonsContainer } from './styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { v4 as uuid } from 'uuid';
-import { setSyntheticTrailingComments } from 'typescript';
-
+import Api from '../../services/api';
+import { getToken } from '../../services/auth';
+import { Link } from 'react-router-dom';
 
 interface IAppointment {
-  id: string;
-  name: string;
-  bgColor: string;
-  textColor?: string;
+  id?: string;
+  name?: string | undefined;
+  weekDay?: number | undefined;
+  duration?: number | undefined;
+  bgColor?: string | undefined;
+  textColor?: string | undefined;
+}
+interface IColumns {
+  [id: string]: {
+    name: string;
+    items: any[];
+  }
 }
 
-const example = [
-  { id: uuid(), name: 'teste1', bgColor: '#BD271B' },
-  { id: uuid(), name: 'teste2', bgColor: '#92D655' },
-  { id: uuid(), name: 'teste3', bgColor: '#245BC8', textColor: '#D0D0D0' },
-]
-
-const example2 = [
-  { id: uuid(), name: 'teste1', bgColor: '#BD271B' },
-  { id: uuid(), name: 'teste2', bgColor: '#92D655' },
-  { id: uuid(), name: 'teste3', bgColor: '#245BC8', textColor: '#D0D0D0' },
-]
-
-const columnsFromBackend = {
-  [uuid()]: {
-    name: 'default',
-    items: [...example2]
-  },
-  [uuid()]: {
-    name: 'Segunda',
-    items: [...example]
-  },
-  [uuid()]: {
-    name: 'Terça',
-    items: []
-  },
-  [uuid()]: {
-    name: 'Quarta',
-    items: []
-  },
-  [uuid()]: {
-    name: 'Quinta',
-    items: []
-  },
-  [uuid()]: {
-    name: 'Sexta',
-    items: []
-  },
-  [uuid()]: {
-    name: 'Sabádo',
-    items: []
-  },
-  [uuid()]: {
-    name: 'Domingo',
-    items: []
-  },
-}
 
 const onDragEnd = (result: any, columns: any, setColumns: any) => {
   if (!result.destination) return;
@@ -98,10 +61,65 @@ const onDragEnd = (result: any, columns: any, setColumns: any) => {
   }
 
 }
-const Schedule = () => {
-  const [appointmentsList, setAppointmentsList] = useState<IAppointment[]>([...example]);
-  const [columns, setColumns] = useState(columnsFromBackend);
 
+const Schedule = () => {
+
+  const [appointments, setAppointments] = useState<IAppointment[]>([]);
+  const [appointmentsColumns, setAppointmentsColumns] = useState<IColumns>({
+    [uuid()]: {
+      name: 'Segunda',
+      items: []
+    },
+    [uuid()]: {
+      name: 'Terça',
+      items: []
+    },
+    [uuid()]: {
+      name: 'Quarta',
+      items: []
+    },
+    [uuid()]: {
+      name: 'Quinta',
+      items: []
+    },
+    [uuid()]: {
+      name: 'Sexta',
+      items: []
+    },
+    [uuid()]: {
+      name: 'Sabádo',
+      items: []
+    },
+    [uuid()]: {
+      name: 'Domingo',
+      items: []
+    },
+  });
+
+  useEffect(() => {
+    async function loadAppointments() {
+      const user = localStorage.getItem('user');
+      const token = getToken();
+      Api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+      if (user) {
+        const { scheduleId } = JSON.parse(user);
+
+        try {
+          const { data }: { data: IAppointment[] } = await Api.get(`/appointments/list/${scheduleId}`);
+
+          const appoints = data.map(({ id, name, weekDay, duration }) => {
+            return { id, name, weekDay, duration, bgColor: '#BD271B' }
+          });
+          setAppointments(appoints);
+          setAppointmentsColumns({ [uuid()]: { name: 'default', items: appoints }, ...appointmentsColumns, });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+    loadAppointments();
+  }, []);
 
   const containerStyle = {
     display: 'flex',
@@ -124,8 +142,8 @@ const Schedule = () => {
 
 
         <ScheduleContainer style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
-          <DragDropContext onDragEnd={result => onDragEnd(result, columns, setColumns)}>
-            {Object.entries(columns).map(([id, column]) => {
+          <DragDropContext onDragEnd={result => onDragEnd(result, appointmentsColumns, setAppointmentsColumns)}>
+            {Object.entries(appointmentsColumns).map(([id, column]) => {
               return (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <ScheduleColumn style={{ margin: 8 }}>
@@ -204,7 +222,9 @@ const Schedule = () => {
       </MainContainer>
 
       <ButtonsContainer>
-        <button>Voltar</button>
+        <Link to="/appointments">
+          <button>Voltar</button>
+        </Link>
         <button>Concluir</button>
       </ButtonsContainer>
     </Container >
