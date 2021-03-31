@@ -1,14 +1,14 @@
 import React, {
   useEffect, useState, useCallback
 } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Container } from 'reactstrap'
-import { InputContainer, ButtonContainer, TitleContainer, InputWrapper, AppointmentsContainer, Appointment, AppointmentListContainer } from './styles'
-import { FiCornerDownLeft } from 'react-icons/fi';
+import { InputContainer, ButtonContainer, TitleContainer, InputWrapper, AppointmentsContainer, Appointment, AppointmentListContainer, LogOutButton } from './styles'
+import { FiCornerDownLeft, FiLogOut } from 'react-icons/fi';
 import { FaTrashAlt } from 'react-icons/fa'
 import Api from '../../services/api';
 
-import { getToken } from '../../services/auth';
+import { getToken, logout } from '../../services/auth';
 
 interface IAppointment {
   id?: string;
@@ -19,6 +19,7 @@ interface IAppointment {
 }
 
 const AppointmentList = () => {
+  const history = useHistory();
 
   const [appointment, setAppointment] = useState<string>('');
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
@@ -90,8 +91,19 @@ const AppointmentList = () => {
     }
   }, [appointments]);
 
+  const handlelogout = () => {
+    logout();
+    history.push('/');
+  }
+
   return (
     <AppointmentListContainer >
+      <LogOutButton>
+        <button>
+          <FiLogOut size={35} color={'#D0D0D0'} onClick={handlelogout} />
+        </button>
+      </LogOutButton>
+
       <TitleContainer>
         <h3>Adicione até dez compromissos que você deseja monitorar em sua rotina:</h3>
       </TitleContainer>
@@ -119,7 +131,8 @@ const AppointmentList = () => {
           <button type="button">Prosseguir</button>
         </Link>
       </ButtonContainer>
-    </AppointmentListContainer>
+
+    </AppointmentListContainer >
   )
 
 }

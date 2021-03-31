@@ -8,6 +8,28 @@ export const AppointmentListContainer = styled.div`
   height: 100vh;
 `;
 
+export const LogOutButton = styled.div(
+  ({ theme }) => css`
+  display: flex;
+  justify-content: center;
+  width: 50px
+  height: 50px;
+
+  button {
+      position: absolute;
+      margin-left: 780px;
+      top: 100px;
+
+      background-color: transparent;
+      outline: none;
+      border: 0;
+      svg {
+        color: "#000";
+      }
+    }
+  `,
+);
+
 export const TitleContainer = styled.div(
   ({ theme }) => css`
     display: flex;
@@ -94,7 +116,7 @@ export const Appointment = styled.div(
 );
 
 export const ButtonContainer = styled.div(
-  ({ theme }) => `
+  ({ theme }) => css`
     display: flex;
     justify-content: center;
     margin-top: 88px;

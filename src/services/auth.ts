@@ -1,5 +1,5 @@
 import Api from '../services/api';
-
+import { useHistory } from 'react-router-dom';
 export const isAuthenticated = () => {
   const refreshToken = localStorage.getItem('accessToken');
   return !!refreshToken;
