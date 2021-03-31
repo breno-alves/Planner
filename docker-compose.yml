@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  app:
+    restart: always
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules' # necessary to not overwrite the build dir.
+    ports:
+      - '80:80'
