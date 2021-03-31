@@ -1,3 +1,4 @@
+import React from 'react';
 import styled, { css } from 'styled-components';
 
 export const HeaderContainer = styled.div`
@@ -6,6 +7,7 @@ export const HeaderContainer = styled.div`
   width: 100%;
   margin-bottom: 65px;
 `;
+
 export const Header = styled.div(
   ({ theme }) => css`
     width: 590px;
@@ -62,6 +64,8 @@ export const Appointment = styled.div(
 
 export const ScheduleColumn = styled.div(
   ({ theme }) => `
+  color: ${theme.color.txtLow};
+
     // display: flex;
     // justify-content: center;
     // background-color: ${theme.color.bgMedium};
@@ -75,7 +79,6 @@ export const ScheduleColumn = styled.div(
     // p {
     //   position: absolute;
     //   bottom: -55px;
-    //   color: ${theme.color.txtLow};
     //   font-size: ${theme.fontSize.md};
     // }
   `,
@@ -106,3 +109,55 @@ export const ButtonsContainer = styled.div(
 
   `,
 );
+
+export const scheduleColumnStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  boxShadow: 'inset 0px 4px 4px #1C1E23',
+  background: '#282A31',
+  padding: '5px',
+  width: 120,
+  borderRadius: '10px',
+  minHeight: 500,
+};
+
+export const scheduleColumnDefaultStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '5px',
+  width: 120,
+  borderRadius: '10px',
+  minHeight: 500,
+};
+
+export const appointmentItemStyle = (
+  column: string,
+  rest: React.CSSProperties,
+): React.CSSProperties => {
+  return column === 'default'
+    ? {
+        ...rest,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        userSelect: 'none',
+        margin: '8px 80px 0 0',
+        minHeight: '50px',
+        borderRadius: '5px',
+        color: 'white',
+      }
+    : {
+        ...rest,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        userSelect: 'none',
+        width: 100,
+        margin: '8px 0 0 0',
+        minHeight: '50px',
+        borderRadius: '5px',
+        color: 'white',
+      };
+};

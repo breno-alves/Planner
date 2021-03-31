@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { Container } from 'reactstrap'
-import { HeaderContainer, Header, MainContainer, AppointmentsList, ScheduleContainer, Appointment, ScheduleColumn, ButtonsContainer } from './styles';
+import {
+  HeaderContainer, Header,
+  MainContainer, AppointmentsList,
+  ScheduleContainer, Appointment,
+  ScheduleColumn, ButtonsContainer,
+  scheduleColumnStyle, scheduleColumnDefaultStyle,
+  appointmentItemStyle
+} from './styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { v4 as uuid } from 'uuid';
 import Api from '../../services/api';
 import { getToken } from '../../services/auth';
 import { Link } from 'react-router-dom';
+import randomcolor from 'randomcolor';
 
 interface IAppointment {
   id?: string;
@@ -25,7 +33,6 @@ interface IColumns {
 
 const onDragEnd = (result: any, columns: IColumns, setColumns: any) => {
   if (!result.destination) return;
-
 
   const { source, destination } = result;
 
@@ -134,7 +141,9 @@ const Schedule = () => {
           const { data }: { data: IAppointment[] } = await Api.get(`/appointments/list/${scheduleId}`);
 
           const appoints = data.map(({ id, name, weekDay, duration }) => {
-            return { id, name, weekDay, duration, bgColor: '#BD271B' }
+            return {
+              id, name, weekDay, duration, bgColor: randomcolor({ format: 'hex', luminosity: 'dark' })
+            }
           });
           setAppointments(appoints);
           setAppointmentsColumns({ [uuid()]: { name: 'default', items: appoints }, ...appointmentsColumns, });
@@ -164,13 +173,11 @@ const Schedule = () => {
       </HeaderContainer>
 
       <MainContainer>
-
-
         <ScheduleContainer style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
           <DragDropContext onDragEnd={result => onDragEnd(result, appointmentsColumns, setAppointmentsColumns)}>
             {Object.entries(appointmentsColumns).map(([id, column]) => {
               return (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#D0D0D0' }}>
                   <ScheduleColumn style={{ margin: 8 }}>
                     <Droppable droppableId={id} key={id} >
                       {(provided, snapshot) => {
@@ -178,25 +185,7 @@ const Schedule = () => {
                           <div
                             {...provided.droppableProps}
                             ref={provided.innerRef}
-                            style={column.name !== 'default' ? {
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                              boxShadow: 'inset 0px 4px 4px #1C1E23',
-                              background: '#282A31',
-                              padding: '5px',
-                              width: 120,
-                              borderRadius: '10px',
-                              minHeight: 500
-                            } : {
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                              padding: '5px',
-                              width: 120,
-                              borderRadius: '10px',
-                              minHeight: 500
-                            }}
+                            style={column.name !== 'default' ? scheduleColumnStyle : scheduleColumnDefaultStyle}
                           >
                             {column.items.map((item, index) => {
                               return (
@@ -208,19 +197,13 @@ const Schedule = () => {
                                           ref={provided.innerRef}
                                           {...provided.draggableProps}
                                           {...provided.dragHandleProps}
-                                          style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            userSelect: 'none',
-                                            width: 100,
-                                            margin: '8px 0 0 0',
-                                            minHeight: '50px',
-                                            borderRadius: '5px',
-                                            backgroundColor: item.bgColor ? item.bgColor : '#456c86',
-                                            color: 'white',
-                                            ...provided.draggableProps.style,
-                                          }}
+                                          style={
+                                            appointmentItemStyle(column.name, {
+                                              backgroundColor: item.bgColor ? item.bgColor : '#456c86',
+                                              ...appointmentItemStyle,
+                                              ...provided.draggableProps.style,
+                                              width: snapshot.isDragging ? '100px' : '180px',
+                                            })}
                                         >
                                           {item.name}
                                         </div>
@@ -236,15 +219,13 @@ const Schedule = () => {
                       }}
                     </Droppable>
                   </ScheduleColumn>
-
-                  <h2>{column.name}</h2>
+                  {column.name !== 'default' && (<h2>{column.name}</h2>)}
                 </div>
               )
             })}
           </DragDropContext>
         </ScheduleContainer>
-
-      </MainContainer>
+      </MainContainer >
 
       <ButtonsContainer>
         <Link to="/appointments">
@@ -257,3 +238,4 @@ const Schedule = () => {
 }
 
 export default Schedule;
+

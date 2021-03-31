@@ -13,6 +13,14 @@ const GlobalStyle = createGlobalStyle`
   body {
     background-color: ${({ theme }) => theme.color.bgLow}
   }
+
+  .roll-appear{
+    opacity:0;
+  }
+  .roll-enter{
+    opacity:0;
+  }
+
 `;
 
 export default GlobalStyle;
