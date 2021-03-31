@@ -100,7 +100,7 @@ const AppointmentList = () => {
     <AppointmentListContainer >
       <LogOutButton>
         <button>
-          <FiLogOut size={35} color={'#D0D0D0'} onClick={handlelogout} />
+          <FiLogOut size={32} color={'#A2A2A2'} onClick={handlelogout} />
         </button>
       </LogOutButton>
 
