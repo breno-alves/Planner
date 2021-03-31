@@ -23,8 +23,9 @@ interface IColumns {
 }
 
 
-const onDragEnd = (result: any, columns: any, setColumns: any) => {
+const onDragEnd = (result: any, columns: IColumns, setColumns: any) => {
   if (!result.destination) return;
+
 
   const { source, destination } = result;
 
@@ -33,19 +34,43 @@ const onDragEnd = (result: any, columns: any, setColumns: any) => {
     const destColumn = columns[destination.droppableId];
     const sourceItems = [...sourceColumn.items];
     const destItems = [...destColumn.items];
+
     const [removed] = sourceItems.splice(source.index, 1);
-    destItems.splice(destination.index, 0, removed);
-    setColumns({
-      ...columns,
-      [source.droppableId]: {
-        ...sourceColumn,
-        items: sourceItems
-      },
-      [destination.droppableId]: {
-        ...destColumn,
-        items: destItems
-      }
-    });
+
+
+    if (sourceColumn.name !== 'default') {
+      destItems.splice(destination.index, 0, removed);
+    } else {
+      destItems.splice(destination.index, 0, { ...removed, id: uuid() });
+    }
+
+
+    if (sourceColumn.name !== 'default') {
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          items: sourceItems
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          items: destItems
+        }
+      });
+
+    } else {
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          items: [...sourceColumn.items]
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          items: destItems
+        }
+      });
+    }
   } else {
     const column = columns[source.droppableId];
     const copiedItems = [...column.items];
