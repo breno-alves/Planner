@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Row } from 'reactstrap'
+import { Container } from 'reactstrap'
 import { HeaderContainer, Header, MainContainer, AppointmentsList, ScheduleContainer, Appointment, ScheduleColumn, ButtonsContainer } from './styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { v4 as uuid } from 'uuid';
@@ -231,4 +231,4 @@ const Schedule = () => {
   )
 }
 
-export default Schedule
+export default Schedule;

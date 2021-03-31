@@ -10,10 +10,18 @@ import Api from '../../services/api';
 
 import { getToken } from '../../services/auth';
 
+interface IAppointment {
+  id?: string;
+  scheduleId?: string;
+  name?: string;
+  weekDay?: number;
+  duration?: number;
+}
+
 const AppointmentList = () => {
 
   const [appointment, setAppointment] = useState<string>('');
-  const [appointments, setAppointments] = useState<string[]>([]);
+  const [appointments, setAppointments] = useState<IAppointment[]>([]);
 
   useEffect(() => {
     async function loadAppointments() {
@@ -25,9 +33,8 @@ const AppointmentList = () => {
         const { scheduleId } = JSON.parse(user);
 
         try {
-          const { data }: { data: any[] } = await Api.get(`/appointments/list/${scheduleId}`);
-          const appointsName = data.map(({ name }) => name);
-          setAppointments(appointsName);
+          const { data } = await Api.get(`/appointments/list/${scheduleId}`);
+          setAppointments(data);
         } catch (err) {
           console.log(err);
         }
@@ -48,8 +55,8 @@ const AppointmentList = () => {
           const { scheduleId } = JSON.parse(user);
 
           try {
-            await Api.post('/appointments', { name: appointment, scheduleId, weekDay: 0, duration: 0 });
-            setAppointments([...appointments, appointment]);
+            const { data } = await Api.post('/appointments', { name: appointment, scheduleId, weekDay: 0, duration: 0 });
+            setAppointments([...appointments, data]);
             setAppointment('');
           } catch (err) {
             console.log(err);
@@ -58,6 +65,30 @@ const AppointmentList = () => {
       }
     }
   }, [appointments, appointment]);
+
+  const handleAppointmentDelete = useCallback(async (appointmentId?: string) => {
+    if (!appointmentId) return;
+
+    const token = getToken();
+    const user = localStorage.getItem('user');
+    Api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+    if (user) {
+      try {
+        await Api.delete(`/appointments/${appointmentId}`);
+
+        const newAppointments = appointments.reduce((result: IAppointment[], item) => {
+          if (item.id !== appointmentId) {
+            result.push(item);
+          }
+          return result;
+        }, []);
+        setAppointments(newAppointments);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [appointments]);
 
   return (
     <AppointmentListContainer >
@@ -74,10 +105,10 @@ const AppointmentList = () => {
 
       <Container style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
         <AppointmentsContainer>
-          {appointments.map((item, index) =>
-            <Appointment key={index} >
+          {appointments?.map((item, index) =>
+            <Appointment key={item.id} onClick={() => { handleAppointmentDelete(item.id) }} >
               <FaTrashAlt size={15} />
-              <p> {index + 1}. {item}</p>
+              <p> {index + 1}. {item.name}</p>
             </Appointment>
           )}
         </AppointmentsContainer>
