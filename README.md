@@ -4,6 +4,15 @@ Planner Web App
 
 ![gif](https://github.com/breno-alves/Planner/blob/master/docs/images/planner_gif.gif?raw=true)
 
+
+## Figma
+
+Designed by [@Rickyalbuq](https://github.com/rickyalbuq)
+
+- [Figma Link](https://www.figma.com/proto/9dCD7smIReEJIfpafihqnI/Planner?node-id=71%3A2&scaling=contain&page-id=0%3A1&hide-ui=1)
+
+---
+
 ## Version
 
     Node.js v14.15.1
