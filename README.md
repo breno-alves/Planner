@@ -2,6 +2,8 @@
 
 Planner Web App
 
+![gif](https://github.com/breno-alves/Planner/blob/master/docs/images/planner_gif.gif?raw=true)
+
 ## Version
 
     Node.js v14.15.1
