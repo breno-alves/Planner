@@ -12,7 +12,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { v4 as uuid } from 'uuid';
 import Api from '../../services/api';
 import { getToken } from '../../services/auth';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import randomcolor from 'randomcolor';
 
 interface IAppointment {
@@ -95,6 +95,7 @@ const onDragEnd = (result: any, columns: IColumns, setColumns: any) => {
 }
 
 const Schedule = () => {
+  const history = useHistory();
 
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
   const [appointmentsColumns, setAppointmentsColumns] = useState<IColumns>({
@@ -127,6 +128,11 @@ const Schedule = () => {
       items: []
     },
   });
+
+  const completedHandle = () => {
+    localStorage.setItem('itens', JSON.stringify(appointmentsColumns));
+    history.push('/graphs');
+  }
 
   useEffect(() => {
     async function loadAppointments() {
@@ -231,7 +237,7 @@ const Schedule = () => {
         <Link to="/appointments">
           <button>Voltar</button>
         </Link>
-        <button>Concluir</button>
+        <button onClick={completedHandle} >Concluir</button>
       </ButtonsContainer>
     </Container >
   )

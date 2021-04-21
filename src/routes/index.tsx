@@ -6,6 +6,7 @@ import AppointmentList from '../pages/AppointmentList/AppointmentList';
 import Login from '../pages/Login/Login';
 import Signup from '../pages/Signup/Signup';
 import Schedule from '../pages/Schedule/Schedule';
+import Graphs from '../pages/Graphs/Graphs';
 
 interface IProps {
   exact?: boolean;
@@ -33,6 +34,7 @@ const Routes: React.FC = () => (
     <Route path='/signup' component={Signup} />
     <PrivateRoute path="/appointments" component={AppointmentList} />
     <PrivateRoute path="/schedules" component={Schedule} />
+    <PrivateRoute path="/graphs" component={Graphs} />
   </Switch>
 );
 
